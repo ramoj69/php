@@ -1,0 +1,68 @@
+<?php
+session_start(); // Start session to manage user login state
+
+// Simulating a simple user database (in a real app, you'd query this from a database)
+$users = [
+    'ivan' => '$2y$10$kuOzyU19g4iQbIjn08Gluk3HKAi7iCRKGBsfTX/3OVSX5nZ' // Simulating a hashed password
+];
+
+// Handle login
+if (isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Check if username exists and validate the password
+    if (isset($users[$username]) && password_verify($password, $users[$username])) {
+        $_SESSION['user'] = $username; // Set session for logged-in user
+        $message = "User logged in: " . $username;
+    } else {
+        $message = "Invalid username or password!";
+    }
+}
+
+// Handle logout
+if (isset($_POST['logout'])) {
+    session_destroy();
+    $message = "You have been logged out.";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System</title>
+</head>
+<body>
+
+    <h1>Login System</h1>
+
+    <!-- Login Form -->
+    <form method="POST" action="">
+        <label for="username">Username</label>
+        <input type="text" name="username" required><br><br>
+
+        <label for="password">Password</label>
+        <input type="password" name="password" required><br><br>
+
+        <input type="submit" name="login" value="Login">
+    </form>
+
+    <!-- Logout Button (only shown if user is logged in) -->
+    <?php if (isset($_SESSION['user'])): ?>
+        <form method="POST" action="">
+            <input type="submit" name="logout" value="Logout">
+        </form>
+    <?php endif; ?>
+
+    <!-- Display Messages -->
+    <p><?php echo isset($message) ? $message : ''; ?></p>
+
+    <!-- Display Logged-in User Information -->
+    <?php if (isset($_SESSION['user'])): ?>
+        <p>User logged in: <?php echo $_SESSION['user']; ?></p>
+    <?php endif; ?>
+
+</body>
+</html>
