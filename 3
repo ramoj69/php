@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Ordering System</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Menu</h1>
+
+    <table>
+        <tr>
+            <th>Order</th>
+            <th>Amount</th>
+        </tr>
+        <tr>
+            <td>Burger</td>
+            <td>50</td>
+        </tr>
+        <tr>
+            <td>Fries</td>
+            <td>75</td>
+        </tr>
+        <tr>
+            <td>Steak</td>
+            <td>150</td>
+        </tr>
+    </table>
+
+    <br>
+
+    <form method="POST" action="">
+        <label for="order">Select an order</label>
+        <select name="order" required>
+            <option value="Burger">Burger</option>
+            <option value="Fries">Fries</option>
+            <option value="Steak">Steak</option>
+        </select>
+        <br><br>
+
+        <label for="quantity">Quantity</label>
+        <input type="number" name="quantity" min="1" required>
+        <br><br>
+
+        <label for="cash">Cash</label>
+        <input type="number" name="cash" min="1" required>
+        <br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Menu items with their prices
+        $menu = [
+            'Burger' => 50,
+            'Fries' => 75,
+            'Steak' => 150
+        ];
+
+        // Get user input
+        $order = $_POST['order'];
+        $quantity = $_POST['quantity'];
+        $cash = $_POST['cash'];
+
+        // Calculate total cost
+        $total_cost = $menu[$order] * $quantity;
+
+        // Display order summary
+        echo "<h2>Order Summary</h2>";
+        echo "Order: $order <br>";
+        echo "Quantity: $quantity <br>";
+        echo "Total Cost: $total_cost <br>";
+
+        // Check if cash is enough
+        if ($cash >= $total_cost) {
+            $change = $cash - $total_cost;
+            echo "Payment successful! Your change is: $change";
+        } else {
+            $shortage = $total_cost - $cash;
+            echo "Insufficient funds. You need $shortage more.";
+        }
+    }
+    ?>
+
+</body>
+</html>
